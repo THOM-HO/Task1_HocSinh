@@ -166,17 +166,17 @@ public with sharing class TimKiemController {
     //Detail
     public PageReference Detail(){
         String param = ApexPages.currentPage().getParameters().get('index');
-        String idHS = lvHocSinh.get(Integer.valueOf(param)).objHocSinh.Id;
+        // String idHS = lvHocSinh.get(Integer.valueOf(param)).objHocSinh.Id;
         PageReference pg = new PageReference('/apex/VF_ChiTiet');
-        pg.getParameters().put('id',idHS);
+        pg.getParameters().put('id',param);
 		return pg;
     }
     
     //Xóa 1 học sinh
     public void DeleteHS(){
         String param = ApexPages.currentPage().getParameters().get('index');
-        String idHS = lvHocSinh.get(Integer.valueOf(param)).objHocSinh.Id;
-        HocSinh__c hs= new HocSinh__c(Id=idHS);
+        // String idHS = lvHocSinh.get(Integer.valueOf(param)).objHocSinh.Id;
+        HocSinh__c hs= new HocSinh__c(Id=param);
         delete hs;
         currentPage = 1;
         Count();
@@ -214,9 +214,9 @@ public with sharing class TimKiemController {
     // duy chuyển sang trang chỉnh sửa học sinh
     public PageReference UpdateHS(){
         String param = ApexPages.currentPage().getParameters().get('index');
-        String idHS = lvHocSinh.get(Integer.valueOf(param)).objHocSinh.Id;
+        // String idHS = lvHocSinh.get(Integer.valueOf(param)).objHocSinh.Id;
         PageReference pg = new PageReference('/apex/VF_CapNhat');
-        pg.getParameters().put('id',idHS);
+        pg.getParameters().put('id',param);
         pg.getParameters().put('page','VF_TimKiem');
 		return pg;
     }
