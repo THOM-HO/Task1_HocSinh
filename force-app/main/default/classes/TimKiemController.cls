@@ -1,29 +1,41 @@
 /**
 * ClassName: TimKiemController
-* ClassDetail: 
+* ClassDetail: Truy xuất dữ liệu database theo các lần search có điều kiện, thực hiện một số even Thêm mới, chỉnh sửa, xóa đối tượng, xóa hàng loạt, xem chi tiết
 * @created: 2022/06/23 Ho Thi Thom
 * @modified:
 */
 public with sharing class TimKiemController {
- 
- public List<SelectOption> options {get; set;} // select public List<HocSinh>    
- public List<HocSinh> lvHocSinh{get;set;} // Danh sách học sinh hiển thị ra view
- public Condition cond {get; set;} // Đối tượng Cond
- public Integer count {get; set;}  // Số lượng học sinh truy vấn được
- public Integer currentPage {get; set;} // Trang hiện tại được chọn
- private Integer LIMIT_ROW = 5;// Số dòng giới hạn hiển thị  
- public Integer totalPage {get; set;} // Tổng số trang phân trang
- public Integer numberPageShow = 3; // Số trang hiển thị
- public List<Integer> listPage {set; get;}   // List trang được hiển thị EX: 1,2,3 OR 2,3,4
+
+// select public List<Lop__c> 
+ public List<SelectOption> options {get; set;} 
+// Danh sách học sinh hiển thị ra view   
+ public List<HocSinh> lvHocSinh{get;set;} 
+// Đối tượng Cond
+ public Condition cond {get; set;} 
+// Số lượng học sinh truy vấn được
+ public Integer count {get; set;} 
+// Trang hiện tại được chọn
+ public Integer currentPage {get; set;} 
+// Số dòng giới hạn hiển thị  
+ private Integer LIMIT_ROW = 5;
+// Tổng số trang phân trang
+ public Integer totalPage {get; set;} 
+// Số trang hiển thị
+ public Integer numberPageShow = 3; 
+// List trang được hiển thị EX: 1,2,3 OR 2,3,4
+ public List<Integer> listPage {set; get;} 
+// check hiện thông báo chưa nhập điều kiện tìm kiếm
  private String SELECT_ALL = 'ALL';
- public Boolean isNotification {get; set;} // check hiện thông báo chưa nhập điều kiện tìm kiếm
-    /*
-	Khởi tạo options chứa ds lớp
-	Khởi tạo lvHocSinh chứa ds học sinh sẽ hiển thị ra view
-	Khởi tạo listPage số phân trang
-	Khởi tạo data ban đầu init
-	Khởi tạo Cond
-	*/
+ //Trạng thái hiển thị thông báo
+ public Boolean isNotification {get; set;}
+/** 
+* Tên hàm :TimKiemController
+* Chức năng của hàm : Khởi tạo mặt định
+* @param Tham số 
+* @return Giá trị trả về 
+* @created: 2022/06/23 Ho Thi Thom
+* @modified:2022/07/01 Ho Thi Thom    
+*/ 
     public TimKiemController() {
         options = new List<SelectOption>();
         lvHocSinh = new List<HocSinh>();
@@ -31,8 +43,15 @@ public with sharing class TimKiemController {
         cond = new Condition();
         initData();
         isNotification=false;
-    }
-     
+    }    
+/** 
+* Tên hàm :initData
+* Chức năng của hàm : Khởi tạo dữ liệu khi trang load lên lần đầu
+* @param Tham số 
+* @return Giá trị trả về 
+* @created: 2022/06/23 Ho Thi Thom
+* @modified:2022/07/01 Ho Thi Thom    
+*/ 
     public void initData(){
         try {
             // Lấy dữ liệu danh sách lớp hiển thị ra selection
@@ -48,16 +67,23 @@ public with sharing class TimKiemController {
             currentPage = 1;
             totalPage = 1;
             //tổng số trang
-            Count();
-            queryHocSinh();
+            countStudent();
+            queryStudent();
 		} catch (Exception ex) {
             System.debug('====================>abc');
 		}
         
     }
     
-    // Tạo điều kiện query
-     public String condQuery(String queryString){
+/** 
+* Tên hàm :createStringQuery
+* Chức năng của hàm : Tạo chuổi điều kiện query
+* @param Tham số : Chuỗi điều kiện đầu
+* @return : Chuỗi điều kiện query
+* @created:2022/06/23 Ho Thi Thom
+* @modified:2022/07/01 Ho Thi Thom    
+*/ 
+     public String createStringQuery(String queryString){
         String TenHS= cond.objHsCondition.TenHocSinh__c;  
         String LopId= cond.lopId;
         Date Ngay1= cond.objHsCondition.NgaySinh__c;
@@ -88,29 +114,43 @@ public with sharing class TimKiemController {
 		}
     } 
     
-    // đếm số lượng đối tượng tìm được và setup phân trang
-     public void Count(){
+ /** 
+* Tên hàm :countStudent
+* Chức năng của hàm : Đếm số lượng đối tượng tìm được và setup phân trang
+* @param Tham số : 
+* @return : 
+* @created:2022/06/23 Ho Thi Thom
+* @modified:2022/07/01 Ho Thi Thom    
+*/
+     public void countStudent(){
         String queryCount='SELECT COUNT() FROM HocSinh__c';
-        queryCount= condQuery(queryCount);
+        queryCount= createStringQuery(queryCount);
         count = Database.countQuery(queryCount);
         totalPage = (Integer) Math.ceil((Decimal) count / LIMIT_ROW);
      }
     
-    // Truy vấn học sinh
-    public void queryHocSinh(){
+/** 
+* Tên hàm :queryStudent
+* Chức năng của hàm : Lấy danh sách học sinh theo điều kiện
+* @param Tham số : 
+* @return : 
+* @created:2022/06/23 Ho Thi Thom
+* @modified:2022/07/01 Ho Thi Thom    
+*/
+    public void queryStudent(){
         lvHocSinh.clear();
-        String queryHS='SELECT Id, MaHocSinh__c, HoHocSinh__c, TenHocSinh__c, NgaySinh__c, GioiTinh__c, Diem1__c, Diem2__c,Diem3__c, DiemTB__c,TinhTrang__c FROM  HocSinh__c';
+        String queryStudent='SELECT Id, MaHocSinh__c, HoHocSinh__c, TenHocSinh__c, NgaySinh__c, GioiTinh__c, Diem1__c, Diem2__c,Diem3__c, DiemTB__c,TinhTrang__c FROM  HocSinh__c';
         // rap điều kiện
-        queryHS= condQuery(queryHS);
+        queryStudent= createStringQuery(queryStudent);
         if(cond.objHsCondition.GioiTinh__c){
-         	queryHS += ' ORDER BY TenHocSinh__c  ';
+         	queryStudent += ' ORDER BY TenHocSinh__c  ';
         }else{
-           queryHS += ' ORDER BY TenHocSinh__c  DESC ';
+           queryStudent += ' ORDER BY TenHocSinh__c  DESC ';
         }
-        queryHS +=' LIMIT '+LIMIT_ROW;
+        queryStudent +=' LIMIT '+LIMIT_ROW;
         Integer offsetNum= (LIMIT_ROW * (currentPage - 1));
-        queryHS += 'OFFSET '+offsetNum;
-        List<HocSinh__c> hs=  Database.query(queryHS);
+        queryStudent += 'OFFSET '+offsetNum;
+        List<HocSinh__c> hs=  Database.query(queryStudent);
         if(!hs.isEmpty()){
             for(HocSinh__c item : hs){
                 lvHocSinh.add(new HocSinh(false,item));
@@ -119,7 +159,14 @@ public with sharing class TimKiemController {
         }
      }
     
-    //phân trang
+/** 
+* Tên hàm :getPages
+* Chức năng của hàm : Tạo phân trang
+* @param Tham số : 
+* @return : 
+* @created:2022/06/23 Ho Thi Thom
+* @modified:2022/07/01 Ho Thi Thom    
+*/
     public void getPages(){
         listPage.clear();
         Integer distance = (Integer) Math.ceil((Decimal) numberPageShow / 2);
@@ -141,30 +188,50 @@ public with sharing class TimKiemController {
         }
     }
     
-    // thực hiện search
+ /** 
+* Tên hàm :searchStudent
+* Chức năng của hàm : được gọi khi sublit button tìm kiếm trả về danh sách học sinh và phân trang
+* @param Tham số : 
+* @return : 
+* @created:2022/06/23 Ho Thi Thom
+* @modified:2022/07/01 Ho Thi Thom    
+*/
     public void searchStudent(){
         lvHocSinh.clear();
         count=0;
         Date Ngay1= cond.objHsCondition.NgaySinh__c;
         Date Ngay2= cond.objHsCondition1.NgaySinh__c;
-            if(cond.objHsCondition.TenHocSinh__c != null ||(cond.LopId != null && cond.LopId != SELECT_ALL) ||(Ngay1 != null && Ngay2!= null)){
+            if(cond.objHsCondition.TenHocSinh__c != null ||(cond.LopId != null) ||(Ngay1 != null && Ngay2!= null)){
                   isNotification=false;
                   currentPage = 1;
-          		  Count();
-           		  queryHocSinh(); 
+                  countStudent();
+           		  queryStudent(); 
             }else{
                isNotification= true; 
             }  
-    }
-   
-    // Duy chuyển sang trang thêm mới
+    } 
+/** 
+* Tên hàm :addStudent
+* Chức năng của hàm : được gọi để duy chuyển sang trang thêm học sinh
+* @param Tham số : 
+* @return : 
+* @created:2022/06/23 Ho Thi Thom
+* @modified:2022/07/01 Ho Thi Thom    
+*/
     public PageReference addStudent(){
         PageReference pg = new PageReference('/apex/VF_ThemMoi');
 		return pg;
     }
     
-    //Detail
-    public PageReference Detail(){
+/** 
+* Tên hàm :goDetail
+* Chức năng của hàm : được gọi để duy chuyển sang trang thêm học sinh
+* @param Tham số : 
+* @return : 
+* @created:2022/06/23 Ho Thi Thom
+* @modified:2022/07/01 Ho Thi Thom    
+*/
+    public PageReference goDetail(){
         String param = ApexPages.currentPage().getParameters().get('index');
         // String idHS = lvHocSinh.get(Integer.valueOf(param)).objHocSinh.Id;
         PageReference pg = new PageReference('/apex/VF_ChiTiet');
@@ -172,47 +239,75 @@ public with sharing class TimKiemController {
 		return pg;
     }
     
-    //Xóa 1 học sinh
-    public void DeleteHS(){
+/** 
+* Tên hàm :deleteStudent
+* Chức năng của hàm : xóa 1 học sinh
+* @param Tham số : 
+* @return : 
+* @created:2022/06/23 Ho Thi Thom
+* @modified:2022/07/01 Ho Thi Thom    
+*/
+    public void deleteStudent(){
         String param = ApexPages.currentPage().getParameters().get('index');
         // String idHS = lvHocSinh.get(Integer.valueOf(param)).objHocSinh.Id;
-        HocSinh__c hs= new HocSinh__c(Id=param);
-        delete hs;
+        HocSinh__c student= new HocSinh__c(Id=param);
+        delete student;
         currentPage = 1;
-        Count();
-        queryHocSinh(); 
+        countStudent();
+        queryStudent(); 
     }
-    //CheckAll
-    public void DeleteCheck(){
-        List<HocSinh__c> hocsinhs= new List<HocSinh__c>();
+/** 
+* Tên hàm :deleteCheck
+* Chức năng của hàm : duyệt danh sách học sinh được check và xóa
+* @param Tham số : 
+* @return : 
+* @created:2022/06/23 Ho Thi Thom
+* @modified:2022/07/01 Ho Thi Thom    
+*/
+    public void deleteCheck(){
+        List<HocSinh__c> students= new List<HocSinh__c>();
         for(HocSinh item : lvHocSinh){
             if(item.check){
                 String id= item.objHocSinh.Id;
                 HocSinh__c hs= new HocSinh__c(Id=id);
-       			hocsinhs.add(hs); 
+       			students.add(hs); 
             }
         }
-        delete(hocsinhs);
+        delete(students);
         currentPage = 1;
-        Count();
-        queryHocSinh(); 
+        countStudent();
+        queryStudent(); 
         cond.objHsCondition1.GioiTinh__c=false;
     }
-     //CheckAll
-    public void IsCheckAll(){
+/** 
+* Tên hàm :checkAll
+* Chức năng của hàm : check true học sinh khi checkbox checkAll được kích hoạt và ngược lại
+* @param Tham số : 
+* @return : 
+* @created:2022/06/23 Ho Thi Thom
+* @modified:2022/07/01 Ho Thi Thom    
+*/
+    public void checkAll(){
         if(cond.objHsCondition1.GioiTinh__c){
-            for(HocSinh item : lvHocSinh){
-            item.check=true;
+            for(HocSinh student : lvHocSinh){
+            student.check=true;
           }
         }else{
-           for(HocSinh item : lvHocSinh){
-            item.check=false; 
+           for(HocSinh student : lvHocSinh){
+            student.check=false; 
            }
         }
     }
     
-    // duy chuyển sang trang chỉnh sửa học sinh
-    public PageReference UpdateHS(){
+/** 
+* Tên hàm :updateStudent
+* Chức năng của hàm : duy chuyển sang trang cập nhật học sinh
+* @param Tham số : 
+* @return : 
+* @created:2022/06/23 Ho Thi Thom
+* @modified:2022/07/01 Ho Thi Thom    
+*/
+    public PageReference updateStudent(){
         String param = ApexPages.currentPage().getParameters().get('index');
         // String idHS = lvHocSinh.get(Integer.valueOf(param)).objHocSinh.Id;
         PageReference pg = new PageReference('/apex/VF_CapNhat');
@@ -221,34 +316,69 @@ public with sharing class TimKiemController {
 		return pg;
     }
     
-    //pagination
+/** 
+* Tên hàm :nextPage
+* Chức năng của hàm : phân trang, sang trang tiếp theo
+* @param Tham số : 
+* @return : 
+* @created:2022/06/23 Ho Thi Thom
+* @modified:2022/07/01 Ho Thi Thom  
+*/
     public void nextPage(){
         if(currentPage + 1 > totalPage )return;
           currentPage +=1;
-         queryHocSinh();
+         queryStudent();
     }
-  	//prevPage
+/** 
+* Tên hàm :prevPage
+* Chức năng của hàm : phân trang, trang trước đó
+* @param Tham số : 
+* @return : 
+* @created:2022/06/23 Ho Thi Thom
+* @modified:2022/07/01 Ho Thi Thom
+*/
 	public void prevPage(){
         if(currentPage == 1 )return;
         currentPage -=1;
-           queryHocSinh();  
+           queryStudent();  
     }
-    
+/** 
+* Tên hàm :firstPage
+* Chức năng của hàm : phân trang, duy chuyển lại trang đầu tiên
+* @param Tham số : 
+* @return : 
+* @created:2022/06/23 Ho Thi Thom
+* @modified:  2022/07/01 Ho Thi Thom
+*/   
     public void firstPage(){
         currentPage =1;
-        queryHocSinh();
+        queryStudent();
     }
-    
+/** 
+* Tên hàm :lastPage
+* Chức năng của hàm : phân trang, duy chuyển lại trang cuối cùng
+* @param Tham số : 
+* @return : 
+* @created:2022/06/23 Ho Thi Thom
+* @modified:  2022/07/01 Ho Thi Thom
+*/   
     public void lastPage(){
         currentPage = totalPage;
-        queryHocSinh();
+        queryStudent();
     }
     
-    // tùy chọn phân trang
+/** 
+* Tên hàm :setPage
+* Chức năng của hàm : phân trang, duy chuyển sang trang tùy chọn
+* @param Tham số : 
+* @return : 
+* @created:2022/06/23 Ho Thi Thom
+* @modified:  2022/07/01 Ho Thi Thom
+*/ 
     public void setPage(){
         String param = ApexPages.currentPage().getParameters().get('index');
         currentPage = Integer.valueOf(param);
-        queryHocSinh();
+        queryStudent();
     }
     
     class Condition {

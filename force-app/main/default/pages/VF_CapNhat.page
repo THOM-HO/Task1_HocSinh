@@ -30,7 +30,7 @@
                     <apex:outputLabel value="Điểm 3" for="score3" />
                     <apex:inputField value="{!cond.objHsCondition.Diem3__c}" id="score3" />
                     <div></div>
-                    <apex:commandButton action="{!updateHS}" value="Cập nhật" />
+                    <apex:commandButton action="{!updateStudent}" value="Cập nhật" />
                 </apex:panelGrid>
             </apex:pageBlockSection>
         </apex:pageBlock>

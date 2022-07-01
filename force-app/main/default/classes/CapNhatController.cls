@@ -6,22 +6,38 @@
 */
 public with sharing class CapNhatController {
     
-  public Condition cond {get; set;}
-  private String page=''; //Chứa tên page đã duy chuyển qua
-     
+  public Condition cond {get; set;} 
+  //Chứa tên page đã duy chuyển qua
+  private String page=''; 
+
+/** 
+* Tên hàm :CapNhatController
+* Chức năng của hàm : Khởi tạo dữ liệu khi trang load lên lần đầu
+* @param Tham số 
+* @return Giá trị trả về 
+* @created: 2022/06/23 Ho Thi Thom
+* @modified:2022/07/01 Ho Thi Thom    
+*/    
     public CapNhatController() {
-        String param = ApexPages.currentPage().getParameters().get('id'); //id của hs cần cập nhật
+        String idStudent = ApexPages.currentPage().getParameters().get('id'); //id của hs cần cập nhật
         page = ApexPages.currentPage().getParameters().get('page'); 
         cond= new Condition(); 
-        initData( param);
+        initData( idStudent);
     }
     
-    //Khởi tạo
+ /** 
+* Tên hàm :initData
+* Chức năng của hàm : Khởi tạo dữ liệu khi trang load lên lần đầu
+* @param idStudent
+* @return Giá trị trả về 
+* @created: 2022/06/23 Ho Thi Thom
+* @modified:2022/07/01 Ho Thi Thom    
+*/ 
     public void initData(String param){
         HocSinh__c hs= new HocSinh__c();
          			hs=[SELECT  MaHocSinh__c,HoHocSinh__c,TenHocSinh__c,NgaySinh__c,GioiTinh__c, Diem1__c, Diem2__c,Diem3__c
-						FROM HocSinh__C
-						WHERE Id = :param ];
+					      	FROM HocSinh__C
+					      	WHERE Id = :param ];
      cond.objHsCondition.TenHocSinh__c = hs.TenHocSinh__c;
      cond.objHsCondition.HoHocSinh__c =hs.HoHocSinh__c;
      cond.objHsCondition.NgaySinh__c = hs.NgaySinh__c;
@@ -31,26 +47,40 @@ public with sharing class CapNhatController {
      cond.objHsCondition.Diem3__c = hs.Diem3__c;
      cond.objHsCondition.Id = hs.Id;
     }
-    
+ /** 
+* Tên hàm :initData
+* Chức năng của hàm : quay lại trang trước
+* @param idStudent
+* @return Giá trị trả về 
+* @created: 2022/06/23 Ho Thi Thom
+* @modified:2022/07/01 Ho Thi Thom    
+*/ 
     public PageReference back(){
         PageReference pg = new PageReference('/apex/'+page);
         pg.getParameters().put('id',cond.objHsCondition.Id);
 		return pg;
     }
     
-    // Update HS 
-    public PageReference updateHS(){
-        HocSinh__c hs= new HocSinh__c();
-        hs.Id= cond.objHsCondition.Id;
-        hs.TenHocSinh__c= cond.objHsCondition.TenHocSinh__c;
-        hs.HoHocSinh__c =  cond.objHsCondition.HoHocSinh__c;
-        hs.GioiTinh__c= cond.objHsCondition.GioiTinh__c;
-        hs.NgaySinh__c= cond.objHsCondition.NgaySinh__c;
-        hs.Diem1__c=cond.objHsCondition.Diem1__c;
-        hs.Diem2__c=cond.objHsCondition.Diem2__c;
-        hs.Diem3__c=cond.objHsCondition.Diem3__c;
+ /** 
+* Tên hàm :initData
+* Chức năng của hàm : cập nhật học sinh
+* @param idStudent
+* @return Giá trị trả về 
+* @created: 2022/06/23 Ho Thi Thom
+* @modified:2022/07/01 Ho Thi Thom    
+*/
+    public PageReference updateStudent(){
+        HocSinh__c student= new HocSinh__c();
+        student.Id= cond.objHsCondition.Id;
+        student.TenHocSinh__c= cond.objHsCondition.TenHocSinh__c;
+        student.HoHocSinh__c =  cond.objHsCondition.HoHocSinh__c;
+        student.GioiTinh__c= cond.objHsCondition.GioiTinh__c;
+        student.NgaySinh__c= cond.objHsCondition.NgaySinh__c;
+        student.Diem1__c=cond.objHsCondition.Diem1__c;
+        student.Diem2__c=cond.objHsCondition.Diem2__c;
+        student.Diem3__c=cond.objHsCondition.Diem3__c;
         
-        update hs;
+        update student;
         PageReference pg = new PageReference('/apex/'+page);
         pg.getParameters().put('id',cond.objHsCondition.Id);
 		return pg;

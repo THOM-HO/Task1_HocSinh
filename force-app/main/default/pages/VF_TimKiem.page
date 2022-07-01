@@ -117,23 +117,23 @@
                 </apex:panelGroup>
             </apex:pageBlockSection>
             <!-- ACTION FUNCTION -->
-            <apex:actionFunction name="afDetail" status="Waitting" action="{!Detail}" onComplete="console.log('Done')" reRender="msgId, pbsOrderField, refreshJs">
+            <apex:actionFunction name="afDetail" status="Waitting" action="{!goDetail}" onComplete="console.log('Done')" reRender="msgId, pbsOrderField, refreshJs">
                 <apex:param name="index" value="" />
             </apex:actionFunction>
-            <apex:actionFunction name="afUpdate" status="Waitting" action="{!UpdateHS}" onComplete="console.log('Done')" reRender="msgId, pbsOrderField, refreshJs">
+            <apex:actionFunction name="afUpdate" status="Waitting" action="{!updateStudent}" onComplete="console.log('Done')" reRender="msgId, pbsOrderField, refreshJs">
                 <apex:param name="index" value="" />
             </apex:actionFunction>
-            <apex:actionFunction name="afDelete" status="Waitting" action="{!DeleteHS}" onComplete="console.log('Done')" reRender="tbHocsinh, pagination, count">
+            <apex:actionFunction name="afDelete" status="Waitting" action="{!deleteStudent}" onComplete="console.log('Done')" reRender="tbHocsinh, pagination, count">
                 <apex:param name="index" value="" />
             </apex:actionFunction>
             <apex:actionFunction name="afSetPage" status="Waitting" action="{!setPage}" onComplete="console.log('Done')" reRender="tbHocsinh, pagination">
                 <apex:param name="index" value="" />
             </apex:actionFunction>
 
-            <apex:actionFunction name="afDeleteCheck" status="Waitting" action="{!DeleteCheck}" onComplete="console.log('Done')" reRender="tbHocsinh,count,pagination">
+            <apex:actionFunction name="afDeleteCheck" status="Waitting" action="{!deleteCheck}" onComplete="console.log('Done')" reRender="tbHocsinh,count,pagination">
             </apex:actionFunction>
 
-            <apex:actionFunction name="afIsCheckAll" status="Waitting" action="{!IsCheckAll}" onComplete="console.log('Done')" reRender="tbHocsinh">
+            <apex:actionFunction name="afIsCheckAll" status="Waitting" action="{!checkAll}" onComplete="console.log('Done')" reRender="tbHocsinh">
             </apex:actionFunction>
         </apex:pageBlock>
     </apex:form>

@@ -16,9 +16,9 @@ public with sharing class ChiTietController {
     
     public void initData(String param){ 
          HocSinh__c hs= new HocSinh__c();
-         			hs=[SELECT  MaHocSinh__c,HoHocSinh__c,TenHocSinh__c,NgaySinh__c,GioiTinh__c, Diem1__c, Diem2__c,Diem3__c
-						FROM HocSinh__C
-						WHERE Id = :param ];
+         			      hs=[SELECT  MaHocSinh__c,HoHocSinh__c,TenHocSinh__c,NgaySinh__c,GioiTinh__c, Diem1__c, Diem2__c,Diem3__c
+						            FROM HocSinh__C
+					            	WHERE Id = :param ];
      cond.objHsCondition.TenHocSinh__c = hs.TenHocSinh__c;
      cond.objHsCondition.HoHocSinh__c =hs.HoHocSinh__c;
      cond.objHsCondition.NgaySinh__c = hs.NgaySinh__c;
