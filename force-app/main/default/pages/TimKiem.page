@@ -51,7 +51,7 @@
                             <apex:inputCheckbox value="{!record.check}" />
                         </apex:column>
 
-                        <apex:column headerValue="Họ">
+                        <apex:column headerValue="Họ" styleClass="row {!IF(record.objHocSinh.DiemTB__c < 5, 'danger', '')}">
                             <apex:outputText value="{!record.objHocSinh.HoHocSinh__c}" />
                         </apex:column>
 

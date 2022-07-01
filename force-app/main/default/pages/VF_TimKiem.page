@@ -44,53 +44,53 @@
                 </apex:panelGroup>
                 <apex:panelGroup id="tbHocsinh">
                     <apex:pageBlockTable value="{!lvHocSinh}" var="record">
-                        <apex:column styleClass="center">
+                        <apex:column styleClass="row {!IF(record.objHocSinh.DiemTB__c < 5, 'danger', '')}">
                             <apex:facet name="header">
                                 <apex:inputCheckbox value="{!cond.objHsCondition1.GioiTinh__c}" onclick="afIsCheckAll(); return false;" />
                             </apex:facet>
                             <apex:inputCheckbox value="{!record.check}" />
                         </apex:column>
 
-                        <apex:column headerValue="Họ">
+                        <apex:column headerValue="Họ" styleClass="row {!IF(record.objHocSinh.DiemTB__c < 5, 'danger', '')}">
                             <apex:outputText value="{!record.objHocSinh.HoHocSinh__c}" />
                         </apex:column>
 
-                        <apex:column headerValue="Tên">
+                        <apex:column headerValue="Tên" styleClass="row {!IF(record.objHocSinh.DiemTB__c < 5, 'danger', '')}">
                             <apex:commandLink value="{!record.objHocSinh.TenHocSinh__c}" onclick="jsDetail('{!record.objHocSinh.Id}'); return false;"
                             />
                         </apex:column>
 
-                        <apex:column headerValue="Ngày Sinh">
+                        <apex:column headerValue="Ngày Sinh" styleClass="row {!IF(record.objHocSinh.DiemTB__c < 5, 'danger', '')}">
                             <apex:outputText value="{0,date,dd-MM-yyyy}">
                                 <apex:param value="{!record.objHocSinh.NgaySinh__c}" />
                             </apex:outputText>
                         </apex:column>
 
-                        <apex:column headerValue="Giới tính">
+                        <apex:column headerValue="Giới tính" styleClass="row {!IF(record.objHocSinh.DiemTB__c < 5, 'danger', '')}">
                             <apex:outputText value="{!IF(record.objHocSinh.GioiTinh__c,'Nam','Nữ')}" />
                         </apex:column>
 
-                        <apex:column headerValue="Điểm 1">
+                        <apex:column headerValue="Điểm 1" styleClass="row {!IF(record.objHocSinh.DiemTB__c < 5, 'danger', '')}">
                             <apex:outputText value="{!record.objHocSinh.Diem1__c}" />
                         </apex:column>
 
-                        <apex:column headerValue="Điểm 2">
+                        <apex:column headerValue="Điểm 2" styleClass="row {!IF(record.objHocSinh.DiemTB__c < 5, 'danger', '')}">
                             <apex:outputText value="{!record.objHocSinh.Diem2__c}" />
                         </apex:column>
 
-                        <apex:column headerValue="Điểm 3">
+                        <apex:column headerValue="Điểm 3" styleClass="row {!IF(record.objHocSinh.DiemTB__c < 5, 'danger', '')}">
                             <apex:outputText value="{!record.objHocSinh.Diem3__c}" />
                         </apex:column>
 
-                        <apex:column headerValue="Điểm TB">
+                        <apex:column headerValue="Điểm TB" styleClass="row {!IF(record.objHocSinh.DiemTB__c < 5, 'danger', '')}">
                             <apex:outputText value="{!record.objHocSinh.DiemTB__c}" />
                         </apex:column>
 
-                        <apex:column headerValue="Tình Trạng">
+                        <apex:column headerValue="Tình Trạng" styleClass="row {!IF(record.objHocSinh.DiemTB__c < 5, 'danger', '')}">
                             <apex:outputText value="{!record.objHocSinh.TinhTrang__c}" />
                         </apex:column>
 
-                        <apex:column headerValue="">
+                        <apex:column headerValue="" styleClass="row {!IF(record.objHocSinh.DiemTB__c < 5, 'danger', '')}">
                             <apex:commandLink value="Cập nhật" onclick="jsUpdate('{!record.objHocSinh.Id}'); return false;" /> |
                             <apex:commandLink value=" Xóa" onclick="jsDelete('{!record.objHocSinh.Id}'); return false;" />
                         </apex:column>
