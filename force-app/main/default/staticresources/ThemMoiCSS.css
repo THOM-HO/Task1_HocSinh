@@ -7,6 +7,17 @@
     height:100vh;
     display:flex;
     align-items:center;
-    justify-content:center;
+    justify-content:start;
     flex-direction:column;
 }
+.label{
+    display:inline-block;
+    width: 80px;
+    text-align: right;
+    padding-right:10px;
+}
+.center{
+    display:block;
+    text-align: center;
+}
+

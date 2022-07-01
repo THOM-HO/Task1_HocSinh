@@ -44,7 +44,7 @@
                 </apex:panelGroup>
                 <apex:panelGroup id="tbHocsinh">
                     <apex:pageBlockTable value="{!lvHocSinh}" var="record">
-                        <apex:column>
+                        <apex:column styleClass="center">
                             <apex:facet name="header">
                                 <apex:inputCheckbox value="{!cond.objHsCondition1.GioiTinh__c}" onclick="afIsCheckAll(); return false;" />
                             </apex:facet>

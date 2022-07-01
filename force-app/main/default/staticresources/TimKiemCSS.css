@@ -1,15 +1,14 @@
-/* body{
-    display: flex;
+ /* body{
+    display: block;
     align-items: center;
     justify-content: center;
     min-height: 100vh;
 }
-
 .form{
     border: 1px solid;
     padding: 40px;
     border-radius:8px;
-} */
+}  */
 
 .label{
     display:inline-block;
@@ -74,7 +73,7 @@ td{
 
 .pagination{
     display:flex;
-    margin-top:14px;
+    margin:14px 0px;
     gap: 7px;
 }
 
